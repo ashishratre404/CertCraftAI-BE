@@ -1,13 +1,6 @@
-import { readFile } from "fs/promises";
+import { readFile, access } from "fs/promises";
 import path from "path";
-import { OpenAI } from "openai";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { openai } from "./openai.js";
 
 export async function generateCertificateHTML({
   backgroundPath,
@@ -15,6 +8,10 @@ export async function generateCertificateHTML({
   name,
   course,
 }) {
+  // ✅ Validate file paths before reading
+  await access(backgroundPath); // Throws if background image not found
+  await access(referencePath); // Throws if reference image not found
+
   const backgroundBuffer = await readFile(backgroundPath);
   const referenceBuffer = await readFile(referencePath);
 
@@ -170,7 +167,7 @@ export async function generateCertificateHTML({
       content: [
         {
           type: "text",
-          text: `Now generate HTML for this certificate. Place name "${name}" and course "${course}" similar to the reference layout. This HTML will used to convert into pdf. Dont use image as css background but use as image like used in the exaple above`,
+          text: `Now generate HTML for this certificate. Place the name "${name}" and course "${course}" in positions similar to the reference layout. This HTML will used to convert into pdf. Don’t use image as CSS background, but use as image like in the example above`,
         },
         {
           type: "image_url",
