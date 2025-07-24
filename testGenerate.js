@@ -12,7 +12,16 @@ async function test() {
 
   console.log("✅ HTML Generated:\n", html);
 
-  await fs.writeFile("certificate_output.html", html);
+  // Clean the response: strip markdown code fences if present
+  let cleanHtml = html.trim();
+  if (cleanHtml.startsWith("```html")) {
+    cleanHtml = cleanHtml
+      .replace(/^```html\s*/, "")
+      .replace(/```$/, "")
+      .trim();
+  }
+
+  await fs.writeFile("certificate_output.html", cleanHtml);
   console.log("✅ Saved to certificate_output.html");
 }
 
