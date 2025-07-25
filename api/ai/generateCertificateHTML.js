@@ -1,6 +1,6 @@
 import { readFile, access } from "fs/promises";
 import path from "path";
-import { openai } from "./openai.js";
+import { openai } from "../utils/openai.js";
 
 export async function generateCertificateHTML({
   backgroundPath,
@@ -111,7 +111,7 @@ export async function generateCertificateHTML({
   </head>
   <body>
     <div class="container">
-      <img src="./spp.png" alt="issue loading certificate" class="certImg" />
+      <img src="./background.png" alt="issue loading certificate" class="certImg" />
       <div class="info">
         <p class="title">THIS CONFIRMS THAT</p>
         <p class="name">Mrs. Kavita Bhajan Mandali</p>
@@ -139,7 +139,7 @@ export async function generateCertificateHTML({
     {
       role: "system",
       content:
-        "You are an expert in generating HTML certificates from background and reference images.",
+        "You are an expert in generating HTML certificates from background and reference images. Compare the reference image and the background image, and generate HTML that looks like the reference image, but uses the background image and includes the texts that are missing in the background image but present in the reference image.",
     },
     {
       role: "user",
@@ -167,7 +167,11 @@ export async function generateCertificateHTML({
       content: [
         {
           type: "text",
-          text: `Now generate HTML for this certificate. Place the name "${name}" and course "${course}" in positions similar to the reference layout. This HTML will used to convert into pdf. Don’t use image as CSS background, but use as image like in the example above`,
+          text: `Now generate HTML for this certificate. Place the name "${name}" and course "${course}" in positions similar to the reference layout. This HTML will be used to convert into PDF. Don’t use the image as a CSS background—embed it using <img> tag like in the example above.`,
+        },
+        {
+          type: "text",
+          text: `Ensure the HTML includes all key text fields shown in the reference image, such as name, course, certificate ID, and issued on date.`,
         },
         {
           type: "image_url",

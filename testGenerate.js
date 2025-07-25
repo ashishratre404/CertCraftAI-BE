@@ -1,4 +1,4 @@
-import { generateCertificateHTML } from "./ai/generateCertificateHTML.js";
+import { generateCertificateHTML } from "./api/ai/generateCertificateHTML.js";
 import fs from "fs/promises";
 import path from "path";
 

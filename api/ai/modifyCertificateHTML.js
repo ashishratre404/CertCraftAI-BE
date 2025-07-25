@@ -1,4 +1,4 @@
-import { openai } from "./openai.js";
+import { openai } from "../utils/openai.js";
 
 export async function modifyCertificateHTML({ html, instruction }) {
   const messages = [
